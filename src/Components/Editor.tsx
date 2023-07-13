@@ -1,4 +1,9 @@
-import { useEditor, EditorContent, BubbleMenu } from '@tiptap/react'
+import {
+  useEditor,
+  EditorContent,
+  BubbleMenu,
+  FloatingMenu,
+} from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { InitialContent } from './InitialContent'
 import 'highlight.js/styles/atom-one-dark.css'
@@ -43,6 +48,18 @@ export function Editor() {
         className="max-w-[700px] mx-auto pt-16 prose prose-invert "
       />
       {editor && (
+        <FloatingMenu
+          editor={editor}
+          shouldShow={({ state }) => {
+            const { $from } = state.selection
+            const currentLineText = $from.nodeBefore?.textContent
+            return currentLineText === '/'
+          }}
+        >
+          bold
+        </FloatingMenu>
+      )}
+      {editor && (
         <BubbleMenu
           className="bg-zinc-700 shadow-xl border border-zinc-600 shadow-black/20 rounded-lg flex overflow-hidden divide-x divide-zinc-600"
           editor={editor}
@@ -56,16 +73,28 @@ export function Editor() {
             Comment
           </BubbleButton>
           <div className="items-center flex">
-            <BubbleButton>
+            <BubbleButton
+              onClick={() => editor.chain().focus().toggleBold().run()}
+              data-active={editor.isActive('bold')}
+            >
               <RxFontBold className="w-4 h-4" />
             </BubbleButton>
-            <BubbleButton>
+            <BubbleButton
+              onClick={() => editor.chain().focus().toggleItalic().run()}
+              data-active={editor.isActive('bold')}
+            >
               <RxFontItalic className="w-4 h-4" />
             </BubbleButton>
-            <BubbleButton>
+            <BubbleButton
+              onClick={() => editor.chain().focus().toggleStrike().run()}
+              data-active={editor.isActive('bold')}
+            >
               <RxStrikethrough className="w-4 h-4" />
             </BubbleButton>
-            <BubbleButton>
+            <BubbleButton
+              onClick={() => editor.chain().focus().toggleCode().run()}
+              data-active={editor.isActive('bold')}
+            >
               <RxCode className="w-4 h-4" />
             </BubbleButton>
           </div>
